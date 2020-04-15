@@ -1,0 +1,4 @@
+C:\Users\EBERT\AppData\Roaming\npm\node_modules\grpc-tools\bin\protoc -I=. ./protos/dummy.proto
+ --js_out=import_style=commonjs,binary:./server 
+ --grpc_out=./server 
+  --plugin=protoc-gen-grpc=C:\Users\EBERT\AppData\Roaming\npm\node_modules\grpc-tools\bin\grpc_node_plugin.exe
