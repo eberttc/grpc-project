@@ -2,6 +2,9 @@ var greets = require('../server/protos/greet_pb')
 
 var service = require('../server/protos/greet_grpc_pb')
 
+var calc = require('../server/protos/calculator_pb')
+
+var calcService = require('../server/protos/calculator_grpc_pb')
 
 var grpc = require('grpc')
 
@@ -107,16 +110,41 @@ async function greetEveryone(call, callback) {
 
 }
 
+function squareRoot(call, callback) {
+
+    var number = call.request.getNumber()
+
+    if (number >= 0) {
+        var numberRoot = Math.sqrt(number)
+
+        var response = new calc.SquareRootResponse()
+        response.setNumberRoot(numberRoot)
+        callback(null, response)
+
+    } else {
+
+        return callback({
+            code : grpc.status.INVALID_ARGUMENT,
+            message: 'the number being sent is not positive'+' Number sent: '+ number
+        })
+    }
+
+}
+
 function main() {
 
     var server = new grpc.Server()
 
-    server.addService(service.GreetServiceService, {
+    server.addService(calcService.CalculatorServiceService, {
+        squareRoot: squareRoot
+    })
+
+   /*  server.addService(service.GreetServiceService, {
         greet: greet,
         greetManyTimes: greetManyTimes,
         longGreet: longGreet,
         greetEveryone: greetEveryone
-    })
+    }) */
 
     server.bind("127.0.0.1:50051", grpc.ServerCredentials.createInsecure())
 

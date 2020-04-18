@@ -4,6 +4,11 @@ var greets = require('../server/protos/greet_pb')
 var service = require('../server/protos/greet_grpc_pb')
 
 
+var calc = require('../server/protos/calculator_pb')
+
+var calcService = require('../server/protos/calculator_grpc_pb')
+
+
 var grpc = require('grpc')
 
 
@@ -130,10 +135,53 @@ async function callBidirect(interval) {
 
     }
 
-call.end()
+    call.end()
 
 }
 
+function getRpcDeadline(rpcType) {
+    timeAllowed = 5000
+
+    switch (rpcType) {
+        case 1:
+            timeAllowed = 10
+            break;
+        case 2:
+            timeAllowed = 7000
+            break;
+        default:
+            console.log('Invalid RPC Type: Using default timeout')
+    }
+
+    return new Date(Date.now() + timeAllowed)
+
+}
+
+function doErroCall() {
+
+    var deadline = getRpcDeadline(1)
+
+    console.log('Hello I am grpc client')
+
+    var client = new calcService.CalculatorServiceClient(
+        "localhost:50051",
+        grpc.credentials.createInsecure()
+    );
+
+    var number = -1
+    var squareRootRequest = new calc.SquareRootRequest()
+
+    squareRootRequest.setNumber(number)
+
+    client.squareRoot(squareRootRequest, {deadline:deadline}, (error, response) => {
+        if (!error) {
+            console.log('Square root is', response.getNumberRoot())
+        } else {
+            console.log(error.message)
+        }
+    })
+
+}
 
 function main() {
     console.log('Hello from client')
@@ -176,5 +224,5 @@ function main() {
 //main()
 //callGreetManyTime()
 //callLongGreeting()
-
-callBidirect()
+//callBidirect()
+doErroCall()
