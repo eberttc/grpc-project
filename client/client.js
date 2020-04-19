@@ -8,8 +8,17 @@ var calc = require('../server/protos/calculator_pb')
 
 var calcService = require('../server/protos/calculator_grpc_pb')
 
+var fs = require('fs')
+
 
 var grpc = require('grpc')
+
+const credentials = grpc.credentials.createSsl(
+    fs.readFileSync('./certs/ca.crt'),
+    fs.readFileSync('./certs/client.key'),
+    fs.readFileSync('./certs/client.crt')
+)
+
 
 
 function callGreetManyTime() {
@@ -173,7 +182,7 @@ function doErroCall() {
 
     squareRootRequest.setNumber(number)
 
-    client.squareRoot(squareRootRequest, {deadline:deadline}, (error, response) => {
+    client.squareRoot(squareRootRequest, { deadline: deadline }, (error, response) => {
         if (!error) {
             console.log('Square root is', response.getNumberRoot())
         } else {
@@ -183,13 +192,14 @@ function doErroCall() {
 
 }
 
-function main() {
+function callGreeting() {
     console.log('Hello from client')
 
+    let unSafeCred = grpc.credentials.createInsecure()
     // Create our server client
     var client = new service.GreetServiceClient(
         'localhost:50051',
-        grpc.credentials.createInsecure())
+        credentials)
 
 
     //console.log('client', client)
@@ -221,8 +231,8 @@ function main() {
 }
 
 
-//main()
+callGreeting()
 //callGreetManyTime()
 //callLongGreeting()
 //callBidirect()
-doErroCall()
+//doErroCall()

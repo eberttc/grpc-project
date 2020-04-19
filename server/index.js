@@ -6,6 +6,8 @@ var calc = require('../server/protos/calculator_pb')
 
 var calcService = require('../server/protos/calculator_grpc_pb')
 
+const fs = require('fs')
+
 var grpc = require('grpc')
 
 function greet(call, callback) {
@@ -124,8 +126,8 @@ function squareRoot(call, callback) {
     } else {
 
         return callback({
-            code : grpc.status.INVALID_ARGUMENT,
-            message: 'the number being sent is not positive'+' Number sent: '+ number
+            code: grpc.status.INVALID_ARGUMENT,
+            message: 'the number being sent is not positive' + ' Number sent: ' + number
         })
     }
 
@@ -133,20 +135,31 @@ function squareRoot(call, callback) {
 
 function main() {
 
+    let credentials = new grpc.ServerCredentials.createSsl(
+        fs.readFileSync('./certs/ca.crt'),
+        [{
+            cert_chain: fs.readFileSync('./certs/server.crt'),
+            private_key: fs.readFileSync('./certs/server.key')
+        }], true)
+
+    let unsecureCreds = grpc.ServerCredentials.createInsecure()
+
     var server = new grpc.Server()
+    /*
+        server.addService(calcService.CalculatorServiceService, {
+            squareRoot: squareRoot
+        })
+    
+        */
 
-    server.addService(calcService.CalculatorServiceService, {
-        squareRoot: squareRoot
-    })
-
-   /*  server.addService(service.GreetServiceService, {
+    server.addService(service.GreetServiceService, {
         greet: greet,
         greetManyTimes: greetManyTimes,
         longGreet: longGreet,
         greetEveryone: greetEveryone
-    }) */
+    })
 
-    server.bind("127.0.0.1:50051", grpc.ServerCredentials.createInsecure())
+    server.bind("127.0.0.1:50051", credentials)
 
     server.start()
 
