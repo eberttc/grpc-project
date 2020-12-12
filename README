@@ -2,32 +2,13 @@
 
 ## Projetc Structure
 ├── client                 
-│   ├── client.js           // Invoke service using service
+│   ├── onboarding.js           // Invoke service using service
 ├── protos                  
-│   ├── greet.proto         // Definition of contracts (API)
-├── server                     
-│   ├── protos              // Stubs generated with grpc protoc
-│   │   ├──greet_grpc_pb.js 
-│   │   ├──greet_pb.js      
-│   └── index.js
+│   ├── onboarding.proto         // Definition of contracts (API)
          
 
-
-## Command to generate stubs based on proto file.
-
-  C:\Users\EBERT\AppData\Roaming\npm\node_modules\grpc-tools\bin\protoc -I=. ./protos/greet.proto
- --js_out=import_style=commonjs,binary:./server 
- --grpc_out=./server 
- --plugin=protoc-gen-grpc=C:\Users\EBERT\AppData\Roaming\npm\node_modules\grpc-tools\bin\grpc_node_plugin.exe
-
-
-
-## Run the server
-
-   $ # from this directory
-   $ node ./server/index.js
 
 ## Run the client
 
    $ # from this directory
-   $ node ./client/index.js
+   $ node ./client/onboarding.js

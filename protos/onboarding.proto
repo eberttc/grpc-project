@@ -1,0 +1,194 @@
+syntax = "proto3";
+
+package b89.onboarding.v2;
+
+service OnboardingService {
+  rpc ListOnboardingSteps(ListOnboardingStepsRequest) returns (ListOnboardingStepsResponse) {}
+  rpc CreatePerson(CreatePersonRequest) returns (CreatePersonResponse) {}
+  rpc SetPersonPhone(SetPersonPhoneRequest) returns (SetPersonPhoneResponse) {}
+  rpc ValidatePhoneOtp(ValidatePhoneOtpRequest) returns (ValidatePhoneOtpResponse) {}
+  rpc CreateToken(CreateTokenRequest) returns (CreateTokenResponse){}
+  rpc CreditEvaluation(CreditEvaluationRequest) returns (CreditEvaluationResponse) {}
+  rpc SetCheck(SetCheckRequest) returns (SetCheckResponse){}
+  rpc SetPersonEmail(SetPersonEmailRequest) returns (SetPersonEmailResponse) {}
+  rpc ValidateEmailOtp(ValidateEmailOtpRequest) returns (ValidateEmailOtpResponse) {}
+  rpc GetPersonScore(GetPersonScoreRequest) returns (GetPersonScoreResponse) {}
+  rpc CreatePassword(CreatePasswordRequest) returns (CreatePasswordResponse) {}
+  rpc ListQuestions(ListQuestionsRequest) returns (ListQuestionsResponse) {}
+  rpc CreateQuestion(CreateQuestionRequest) returns (CreateQuestionResponse) {}
+  rpc EndOnboardingProcess(EndOnboardingProcessRequest) returns (EndOnboardingProcessResponse) {}
+}
+
+// REQUEST'S
+message CreatePersonRequest {
+  string document_number = 1;
+  string first_name = 2;
+  string last_name = 3;
+  string document_type = 4;
+  string country_code = 5;
+  string phone_number = 6;
+  string birthdate = 7;
+}
+
+message SetPersonPhoneRequest{
+  string phone_number = 1;
+}
+
+message ValidatePhoneOtpRequest {
+  string phone_otp = 1;
+}
+
+message SetPersonEmailRequest {
+  string email_address = 1;
+}
+
+message ValidateEmailOtpRequest {
+  string email_otp = 1;
+}
+
+message CreateTokenRequest {}
+
+message CreditEvaluationRequest {}
+
+message SetCheckRequest{}
+
+message CreatePasswordRequest {
+  string password = 1;
+}
+
+message ListQuestionsRequest{}
+
+message CreateQuestionRequest{
+  string id = 1;
+  string answer = 2;
+}
+
+message GetPersonScoreRequest {
+}
+
+message ListOnboardingStepsRequest{
+  string req_id = 1;
+}
+
+message EndOnboardingProcessRequest{
+
+}
+
+// RESPONSE'S
+message CreatePersonPayloadResponse {
+  string id = 1;
+  string next_step = 3;
+}
+
+message CreatePersonResponse {
+  bool success = 1;
+  CreatePersonPayloadResponse payload = 2;
+}
+
+message SetPersonPhoneResponse{
+  bool success = 1;
+}
+
+message CreateTokenPayloadResponse {
+  string token = 1;
+}
+
+message CreateTokenResponse {
+  bool success = 1;
+  CreateTokenPayloadResponse payload = 2;
+}
+
+message ValidatePhoneOtpPayloadResponse {
+  string next_step = 1;
+}
+
+message ValidatePhoneOtpResponse {
+  bool success = 1;
+  ValidatePhoneOtpPayloadResponse payload = 2;
+
+}
+
+message SetCheckPayloadResponse {
+  string next_step = 1;
+}
+
+message SetCheckResponse {
+  bool success = 1;
+  SetCheckPayloadResponse payload = 2;
+}
+
+
+message SetPersonEmailPayloadResponse {
+  string message = 1;
+  string next_step = 2;
+}
+
+message SetPersonEmailResponse {
+  bool success = 1;
+  SetPersonEmailPayloadResponse payload = 2;
+}
+
+
+message ValidateEmailOtpPayloadResponse {
+  string next_step = 1;
+}
+
+message ValidateEmailOtpResponse {
+  bool success = 1;
+  ValidateEmailOtpPayloadResponse payload = 2;
+}
+
+message CreatePasswordPayloadResponse {
+  string next_step = 1;
+}
+
+message CreatePasswordResponse {
+  bool success = 1;
+  CreatePasswordPayloadResponse payload = 2;
+}
+
+message CreditEvaluationResponse {
+  bool success = 1;
+}
+
+message PayloadListQuestions {
+  string id = 1;
+  string value = 2;
+}
+
+message PayloadCreateQuestion {
+  string next_step = 1;
+}
+
+message ListQuestionsResponse {
+  bool success = 1;
+  repeated PayloadListQuestions payload = 2;
+}
+
+message CreateQuestionResponse {
+  bool success = 1;
+  PayloadCreateQuestion payload = 2;
+
+}
+
+message PersonScoreResponse {
+  bool is_document_valid = 1;
+  bool is_selfie_valid = 2;
+  bool is_validation_completed=3;
+  string next_step = 4;
+}
+
+message GetPersonScoreResponse {
+  bool success = 1;
+  PersonScoreResponse payload = 2;
+}
+
+message ListOnboardingStepsResponse {
+  bool success = 1;
+  repeated string steps = 2;
+  string host =3;
+}
+
+message EndOnboardingProcessResponse {
+  bool success = 1;
+}
